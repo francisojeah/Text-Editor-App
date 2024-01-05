@@ -2,17 +2,32 @@ import tkinter as tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 def open_file(window, text_edit):
-    filepath = askopenfilename(filetypes=[("Text Files", "*txt")])
+    filepath = askopenfilename(filetypes=[("Text Files", "*.txt")])
 
     if not filepath:
         return
     
     # delete from first likne and first character
     text_edit.delete(1.0, tk.END)
+
     with open(filepath, "r") as f:
         content = f.read()
         text_edit.insert(tk.END, content)
     window.title(f"Open File: {filepath}")
+
+
+def save_file(window, text_edit):
+
+    filepath = asksaveasfilename(filetypes=[("Text Files", "*.txt")])
+
+    if not filepath:
+        return
+    
+    with open(filepath, "w") as f:
+        content = text_edit.get(1.0, tk.END)
+        f.write(content)
+    window.title(f"Open File: {filepath}")
+
 
 def main():
     window = tk.Tk()
@@ -25,7 +40,7 @@ def main():
     text_edit.grid(row=0, column=1)
 
     frame= tk.Frame(window, relief=tk.RAISED, bd=2)
-    save_button = tk.Button(frame, text="Save")
+    save_button = tk.Button(frame, text="Save", command=lambda: save_file(window, text_edit))
     open_button = tk.Button(frame, text="Open", command=lambda: open_file(window, text_edit))
 
     save_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
